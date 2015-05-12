@@ -26,7 +26,12 @@ exports.answer = function(req, res){
 
 };
 
-//GET /autores.ejs
+//GET /quizes/autores.ejs
 exports.autores = function(req, res){
 	res.render('quizes/autores', {respuesta: 'Autores'});
+};
+
+//GET /quizes/busqueda
+exports.busqueda = function(req, res){
+	res.render('quizes/busqueda', {respuesta: 'Busqueda'});
 };
