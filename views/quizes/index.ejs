@@ -1,9 +1,11 @@
-<h3> Bienvenido a <%= title %></h3>
-<p>El portal donde podrá crear sus propios juegos!</p>
-<p><a href="/quizes"> Comience a jugar</a></p>
+<form method="get" action="/quizes">
+	<p>Búsqueda de preguntas</p>
+	<input type="text" name="search"/>
+	<input type="submit" value="Texto a buscar">
+</form>
 
 <table>
-<% var i; for(i=0; i<quizes.length; i++){ %>
-	<tr><td><a href="quizes/<%= quizes[i].id %>"><%= quizes[i].pregunta %></a></td></tr>
-	<% } %>
-</table>
+   <% var i; for (i=0; i < quizes.length; i++) { %>        
+      <tr><td><a href="quizes/<%= quizes[i].id %>"><%= quizes[i].pregunta %></a></td></tr> 
+   <% } %>
+ </table
