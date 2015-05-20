@@ -87,7 +87,7 @@ exports.create = function(req, res){
 				})
 			}
 		}
-	);
+	).catch(function(error){next(error);});
 };
 
 //GET /quizes/:id/edit
@@ -111,5 +111,12 @@ exports.update = function(req, res){
 				res.redirect('/quizes');	//Redireccion HTTP a lista de preguntas (URL relativo)
 			});
 		}
-	});
+	}).catch(function(error){next(error);});
+};
+
+// DELETE /quizes/:id
+exports.destroy = function(req, res){
+	req.quiz.destroy().then(function(){
+		res.redirect('/quizes');
+	}).catch(function(error){next(error);});
 };
