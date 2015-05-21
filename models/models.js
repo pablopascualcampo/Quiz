@@ -42,7 +42,7 @@ exports.Quiz = Quiz; //Exportar la definición de la tabla Quiz
 exports.Comment = Comment;
 
 //sequelize.sync() crea e inicializa tabla de preguntas en DB
-sequelize.sync().then(function(){
+sequelize.sync({force: true}).then(function(){
 	//then(..) ejecuta el manejador una vez creada la tabla
 	Quiz.count().then(function(count){
 		if(count === 0){//La tabla se inicializa sólo si está vacía
