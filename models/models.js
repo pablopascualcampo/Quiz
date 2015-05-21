@@ -35,24 +35,43 @@ var Quiz = sequelize.import(quiz_path);
 var comment_path = path.join(__dirname, 'comment');
 var Comment = sequelize.import(comment_path);
 
+//Importar definición de la tabla Comment
+var user_path = path.join(__dirname, 'user');
+var User = sequelize.import(user_path);
+
 Comment.belongsTo(Quiz);
 Quiz.hasMany(Comment);
 
-exports.Quiz = Quiz; //Exportar la definición de la tabla Quiz
+//Los quizes pertenecen a un usuario registrado
+Quiz.belongsTo(User);
+User.hasMany(Quiz);
+
+//Exportar las tablas
+exports.Quiz = Quiz;
 exports.Comment = Comment;
+exports.User = User;
 
 //sequelize.sync() crea e inicializa tabla de preguntas en DB
 sequelize.sync({force: true}).then(function(){
 	//then(..) ejecuta el manejador una vez creada la tabla
-	Quiz.count().then(function(count){
+	User.count().then(function(count){
 		if(count === 0){//La tabla se inicializa sólo si está vacía
-			Quiz.bulkCreate(
-				[ {pregunta: 'Capital de Italia', respuesta: 'Roma'},
-				  {pregunta: 'Capital de Portugal', respuesta: 'Lisboa'},
-				  {pregunta: 'Forma de Italia:', respuesta: 'Bota'},
-				  {pregunta: 'Capital de España', respuesta: 'Madrid'}
+			User.bulkCreate(
+				[ {username: 'admin', password: '1234', isAdmin: true},
+				  {username: 'pepe',  password: '5678'}	//El valor por defecto de isAdmin es false
 				]
-				).then(function(){console.log('Base de datos inicializada')});
+			).then(function(){
+				console.log('Base de datos (tabla user) inicializada');
+				Quiz.count().then(function(count){
+					if(count === 0){
+						Quiz.bulkCreate(
+							[ {pregunta: 'Capital de Italia', respuesta: 'Roma', UserId: 2},	//Estos quizes pertenecen al usuario 'pepe' (2)
+							  {pregunta: 'Capital de Portugal', respuesta: 'Lisboa', UserId: 2}
+							]
+						).then(function(){console.log('Base de datos (tabla quiz) inicializada')});
+					}
+				});
+			});
 		};
 	});
 });
