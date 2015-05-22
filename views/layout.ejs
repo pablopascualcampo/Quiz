@@ -29,6 +29,10 @@
 				<span><a href="/">Inicio</a></span>
 				<span><a href="/quizes">Preguntas</a></span>
 				<span><a href="/author">Autores</a></span>
+
+				<% if(session.user){ %>
+					<span><a href="/user/<%= session.user.id %>/quizes">Mis preguntas</a></span>
+				<% } %>
 			</nav>
 
 			<section class="main" id="s1">
