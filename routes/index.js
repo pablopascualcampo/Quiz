@@ -6,10 +6,10 @@ var author = require('../controllers/author');
 
 var quizController = require('../controllers/quiz_controller');
 var commentController = require('../controllers/comment_controller');
-
 var sessionController = require('../controllers/session_controller');
-
 var userController = require('../controllers/user_controller');
+
+var statisticsController = require('../controllers/statistics_controller');
 
 /* GET home page. */
 router.get('/', function(req, res) {
@@ -52,5 +52,8 @@ router.get('/quizes/:quizId(\\d+)/comments/:commentId(\\d+)/publish', sessionCon
 
 //Definición de ruta de autores
 router.get('/author', author.author);
+
+//Definición de rutas de estadísticas
+router.get('/quizes/statistics', statisticsController.statistics);
 
 module.exports = router;
