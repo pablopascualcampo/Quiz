@@ -41,6 +41,10 @@ exports.index = function(req, res){
 		options.where = {UserId: req.user.id}
 	}
 
+	if(req.session && req.session.user){	//Se ha echo el refresco al darle a borrar o crear favorito
+		options.include = {model: models.User, as: "Fans"};
+	}
+
 	if(req.query.search === undefined){
 		models.Quiz.findAll().then(function(quizes){
 			res.render('quizes/index.ejs', {quizes: quizes, errors: []});
@@ -61,6 +65,14 @@ exports.index = function(req, res){
 
 			for(var i = 0; i<quizes.length; i++){
 				quizes[i].pregunta = orden[i];
+			}			
+
+			if(req.session.user){
+				quizes.forEach(function(quiz){
+					quiz.selected = quiz.Fans.some(function(fan){
+						return fan.id == req.session.user.id;	//Comprobamos que ese fav corresponda al usuario
+					});
+				});
 			}
 
 			res.render('quizes/index.ejs', {quizes: quizes, errors: []});
@@ -71,8 +83,22 @@ exports.index = function(req, res){
 
 //GET /quizes/:id
 exports.show = function(req, res){
-	res.render('quizes/show', { quiz: req.quiz, errors: []});
-};	//req.quiz: instancia de quiz cargada con autoload
+
+	models.Quiz.findAll({where: {id: req.params.quizId}, include: {model: models.User, as: "Fans"}})
+	.then(function(quizes){
+		if(req.session.user){
+			quizes.forEach(function(quiz){
+				req.quiz.selected = quiz.Fans.some(function(fan){
+					return fan.id === req.session.user.id
+				});
+
+				res.render('quizes/show', {quiz: req.quiz, errors: []});
+			});
+		}else{
+			res.render('quizes/show', {quiz: req.quiz, errors: []});
+		}
+	});
+};
 
 //GET /quizes/:id/answer
 exports.answer = function(req, res){	

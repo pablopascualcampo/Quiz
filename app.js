@@ -46,6 +46,11 @@ app.use(function(req, res, next){
     }
 );
 
+app.use(function(req, res, next){
+    req.session.time = req.session.time || (new Date()).getMinutes();
+
+    next();
+});
 
 app.use('/', routes);
 

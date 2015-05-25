@@ -7,6 +7,32 @@ exports.loginRequired = function(req, res, next){
 	}
 };
 
+//MW de auto-logout
+exports.auto_logout = function(req, res, next){
+	var minutes = (new Date()).getMinutes();
+	console.log("auto_logout");
+
+	if(req.session.user){
+		console.log("Usuario:", req.session.user.username);
+		console.log("ahora", minutes);
+		console.log("minutos del usuario:", req.session.time);
+
+		if((minutes-req.session.time)>1 || (minutes-req.session.time)<0){
+			console.log("logout");
+			req.session.time = undefined;
+			res.redirect('/logout');
+		}else{
+			req.session.time = (new Date()).getMinutes();
+			console.log("else de auto_logout");
+			console.log("Usuario:", req.session.user.username);
+			console.log("minutos del usuario", req.session.time);
+			next();
+		}
+	}else{
+		next();
+	}
+};
+
 //GET /login	-- Formulario de login
 exports.new = function(req, res){
 	var errors = req.session.errors || {};
